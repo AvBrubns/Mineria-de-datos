@@ -1,7 +1,6 @@
 package src;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,30 +13,46 @@ public class Apriori {
     public Apriori(List<List<String>> transactions, List<String> elements) {
         this.transactions = transactions;
         this.elements = elements;
-        this.k = 2;
+        this.k = 1;
         this.itemsets = new ArrayList<>();
     }
 
+    /*
+    * Valida que la lista de transacciones tenga al menos 2 elementos y que la lista de elementos sea distito de cero
+    * Muestra el conjunto de elementos que cumplen el humbral con k como numero de interaciones.
+    * */
     public void loop() {
-        Itemset temp;
-        while(true) {
-            Itemset itemset = new Itemset();
-            combinations(elements, k, 0, new String [k], itemset);
-            itemsets.add(itemset);
-            //System.out.println(transactions.get(0).get(0));
-            for(Item item : itemset.list) {
-                contain(item);
-                System.out.println(item.occurrences);
-            }
-
-            break;
+        if (this.transactions.size() < 2 || this.elements.size() == 0) {
+            System.out.println("El archivo de transacciones no cumple con los requisitos.");
+            return;
         }
+        boolean status = false;
+        while(!status) {
+            Itemset tempItemset = new Itemset();
+            Itemset newItemset = new Itemset();
+            combinations(elements, k, 0, new String [k], tempItemset);
+            for(Item item : tempItemset.list) {
+                contain(item);
+                item.calculateSupport(transactions.size());
+                if(item.support >= TRESHOLDER) {
+                    newItemset.list.add(item);
+                }
+            }
+            if (newItemset.list.isEmpty()) {
+                status = true;
+            }else {
+                if(itemsets.size() > 2) {
+                    itemsets.remove(0);
+                }
+                itemsets.add(newItemset);
+                k++;
+            }
+        }
+        itemsets.get(1).printInfo();
     }
 
     /*
-    * String[] elements: Lista de elementos
-    * int len: Tamaño para la contruccion de conjuntos
-    * String result: Arreglo que almacena los resultados
+    * Genera las combinaciones a partir de la lista de elementos
     * */
     public void combinations(List<String> elements, int len, int startPosition, String[] group, Itemset itemset) {
         if (len == 0){
@@ -53,17 +68,18 @@ public class Apriori {
         }
     }
 
+    /*
+    * contain: determina si el item esta dentro de la transaccion (ocurrencias)
+    * */
     public void contain(Item item) {
         for(List<String> transaction : transactions) {
             Itemset temp = new Itemset();
-            int occurrence = 0;
             combinations(transaction, k, 0, new String[k], temp);
             for(Item itemTemp: temp.list) {
                 if(itemTemp.group.equals(item.group)) {
                     item.occurrences++;
                 }
             }
-            //System.out.println(item.group + "," +item.occurrences);
         }
     }
 }

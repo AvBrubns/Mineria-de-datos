@@ -8,7 +8,6 @@ class Main {
     Reader reader = new Reader();
     reader.read("transacciones.txt");
     Apriori ap = new Apriori(reader.transactions, reader.elements);
-    //System.out.println(reader.transactions);
     ap.loop();
   }
 }

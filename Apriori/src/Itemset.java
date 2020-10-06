@@ -8,4 +8,10 @@ public class Itemset {
     public Itemset() {
         list = new ArrayList<>();
     }
+    /* Imprime los datos de item con un formato especifico */
+    public void printInfo() {
+        for(Item item : list) {
+            System.out.println(item.group + " -> " + item.occurrences + "   " + item.support);
+        }
+    }
 }

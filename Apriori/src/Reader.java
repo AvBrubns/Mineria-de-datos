@@ -14,6 +14,7 @@ public class Reader {
     transactions = new ArrayList<>();
     elements = new ArrayList<>();
   }
+  /* Lee un archivo, generando la lista de transacciones y la lista de elementos */
   public void read(String path) {
     try {
       File file = new File(path);
@@ -26,11 +27,11 @@ public class Reader {
         this.buildElements(line);
       }
     }catch(Exception e) {
-      System.out.println(e.getMessage());
+      System.out.println("El archivo no tiene un formato válido");
     }
   }
 
-  // Build a list with base elements
+  /* Construye una lista con los elementos base */
   public void buildElements(String line) {
     for(String item: line.split(",")) {
       if (!this.elements.contains(item)) {
