@@ -3,6 +3,7 @@ package src;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,7 +21,7 @@ public class Reader {
       while(sc.hasNextLine()) {
         String line = sc.nextLine();
         List<String> item = new ArrayList<>();
-        item.add(line);
+        item.addAll(Arrays.asList(line.split(",")));
         this.transactions.add(item);
         this.buildElements(line);
       }
